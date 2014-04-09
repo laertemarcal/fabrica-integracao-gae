@@ -8,6 +8,7 @@ import com.google.android.gcm.GCMRegistrar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,6 +61,7 @@ public class RegisterActivity extends Activity {
 		//Se não, cria o botão de registro e continua o código.
 		if (GCMRegistrar.isRegisteredOnServer(this)) {
 			Toast.makeText(getApplicationContext(), "Pronto para receber notificações", Toast.LENGTH_LONG).show();
+			Log.d("Registration ID", GCMRegistrar.getRegistrationId(this));
 			Intent i = new Intent(getApplicationContext(), MainActivity.class);
 			startActivity(i);
 			finish();

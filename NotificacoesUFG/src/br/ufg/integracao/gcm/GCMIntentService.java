@@ -104,12 +104,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		Intent notificationIntent = new Intent(context, MainActivity.class);
 
 		// set intent so it does not start a new activity
+		notificationIntent.putExtra("message", message);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		notificationIntent.putExtra("message", message);
 		PendingIntent intent = PendingIntent.getActivity(context, 0,
-				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT
-						| PendingIntent.FLAG_ONE_SHOT);
+				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		notification.setLatestEventInfo(context, title, message, intent);
 
@@ -118,14 +117,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 		// Play default notification sound
 		notification.defaults |= Notification.DEFAULT_SOUND;
 
-		// notification.sound = Uri.parse("android.resource://" +
-		// context.getPackageName() + "your_sound_file_name.mp3");
-		// Notification notification_tow = notification.setContentTitle(title)
-		// .setContentText(message).setContentIntent(intent)
-		// .setSmallIcon(icon).setWhen(when).setAutoCancel(true)
-		// .setDefaults(-1).build();
-		// Vibrate if vibrate is enabled
-		// notification.defaults |= Notification.DEFAULT_VIBRATE;
 		Vibrator vibra = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		vibra.vibrate(pattern, -1);
 

@@ -3,6 +3,7 @@ package br.ufg.integracao.gcm;
 import static br.ufg.integracao.gcm.CommonUtilities.DISPLAY_MESSAGE_ACTION;
 import static br.ufg.integracao.gcm.CommonUtilities.EXTRA_MESSAGE;
 import static br.ufg.integracao.gcm.CommonUtilities.SENDER_ID;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -13,6 +14,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,24 +23,25 @@ import com.google.android.gcm.GCMRegistrar;
 public class MainActivity extends Activity {
 	// label to display gcm messages
 	TextView lblMessage;
-	
+
 	// Asyntask
 	AsyncTask<Void, Void, Void> mRegisterTask;
-	
+
 	// Alert dialog manager
 	AlertDialogManager alert = new AlertDialogManager();
-	
+
 	// Connection detector
 	ConnectionDetector cd;
-	
+
 	public static String name;
 	public static String email;
+	private String x;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		cd = new ConnectionDetector(getApplicationContext());
 
 		// Check if Internet present
@@ -50,13 +53,13 @@ public class MainActivity extends Activity {
 			// stop executing code by return
 			return;
 		}
-		
+
 		// Getting name, email from intent
 		Intent i = getIntent();
-		
+
 		name = i.getStringExtra("name");
-		email = i.getStringExtra("email");		
-		
+		email = i.getStringExtra("email");
+
 		// Make sure the device has the proper dependencies.
 		GCMRegistrar.checkDevice(this);
 
@@ -64,28 +67,32 @@ public class MainActivity extends Activity {
 		// while developing the app, then uncomment it when it's ready.
 		GCMRegistrar.checkManifest(this);
 
-		//TextView lblMessage = new TextView(getApplicationContext());
 		lblMessage = (TextView) findViewById(R.id.lblMessage);
-//		lblMessage.setText(getIntent().getExtras().getString("message"));
-//		TextView message= (TextView) findViewById(R.id.lblMessage);
-//		message.setText(getIntent().getExtras().getString("message"));
 		
+		if (getIntent().getStringExtra(EXTRA_MESSAGE) != null) {
+			lblMessage.setTextColor(Color.YELLOW);
+			lblMessage
+					.setText(getIntent().getStringExtra(EXTRA_MESSAGE) + "\n");
+		}
 		registerReceiver(mHandleMessageReceiver, new IntentFilter(
 				DISPLAY_MESSAGE_ACTION));
-		
+
 		// Get GCM registration id
 		final String regId = GCMRegistrar.getRegistrationId(this);
 
 		// Check if regid already presents
 		if (regId.equals("")) {
-			// Registration is not present, register now with GCM			
+			// Registration is not present, register now with GCM
 			GCMRegistrar.register(this, SENDER_ID);
 		} else {
 			// Device is already registered on GCM
 			if (GCMRegistrar.isRegisteredOnServer(this)) {
-				// Skips registration.	
-				// Código abaixo para mostrar a checagem que foi desabilitado após a implementação da checagem na activity de registro
-				// Toast.makeText(getApplicationContext(), "Already registered with GCM", Toast.LENGTH_LONG).show();
+				// Skips registration.
+				// Código abaixo para mostrar a checagem que foi desabilitado
+				// após a implementação da checagem na activity de registro
+				// Toast.makeText(getApplicationContext(),
+				// "Already registered with GCM", Toast.LENGTH_LONG).show();
+				return;
 			} else {
 				// Try to register again, but not in the UI thread.
 				// It's also necessary to cancel the thread onDestroy(),
@@ -110,7 +117,7 @@ public class MainActivity extends Activity {
 				mRegisterTask.execute(null, null, null);
 			}
 		}
-	}		
+	}
 
 	/**
 	 * Receiving push messages
@@ -121,23 +128,22 @@ public class MainActivity extends Activity {
 			String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
 			// Waking up mobile if it is sleeping
 			WakeLocker.acquire(getApplicationContext());
-			
+
 			/**
-			 * Take appropriate action on this message
-			 * depending upon your app requirement
-			 * For now i am just displaying it on the screen
+			 * Take appropriate action on this message depending upon your app
+			 * requirement For now i am just displaying it on the screen
 			 * */
-			
+
 			// Showing received message
-			lblMessage.setTextColor(Color.WHITE);
 			lblMessage.append(newMessage + "\n");
-			Toast.makeText(getApplicationContext(), "Nova Mensagem: " + newMessage, Toast.LENGTH_LONG).show();
-			
+			Toast.makeText(getApplicationContext(),
+					"Nova Mensagem: " + newMessage, Toast.LENGTH_LONG).show();
+
 			// Releasing wake lock
 			WakeLocker.release();
 		}
 	};
-	
+
 	@Override
 	protected void onDestroy() {
 		if (mRegisterTask != null) {
