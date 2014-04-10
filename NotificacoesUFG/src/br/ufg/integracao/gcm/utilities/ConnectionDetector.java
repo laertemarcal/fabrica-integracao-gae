@@ -1,4 +1,4 @@
-package br.ufg.integracao.gcm;
+package br.ufg.integracao.gcm.utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -13,9 +13,9 @@ public class ConnectionDetector {
     }
  
     /**
-     * Checking for all possible internet providers
+     * Método checa se há conexão com a internet
      * **/
-    public boolean isConnectingToInternet(){
+    public boolean isConnectedToInternet(){
         ConnectivityManager connectivity = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
           if (connectivity != null)
           {
