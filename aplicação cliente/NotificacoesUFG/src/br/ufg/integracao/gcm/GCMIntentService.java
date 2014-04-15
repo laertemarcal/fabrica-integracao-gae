@@ -2,14 +2,14 @@ package br.ufg.integracao.gcm;
 
 import static br.ufg.integracao.gcm.utilities.CommonUtilities.SENDER_ID;
 import static br.ufg.integracao.gcm.utilities.CommonUtilities.displayMessage;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -17,8 +17,8 @@ import com.google.android.gcm.GCMBaseIntentService;
 /**
  * 
  * @author Laerte Filho
- *
- * IntentService do GCM
+ * 
+ *         IntentService do GCM
  */
 
 public class GCMIntentService extends GCMBaseIntentService {
@@ -32,7 +32,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Dispositivo registrado: regId = " + registrationId);
-		displayMessage(context, "Seu dispositivo foi registrado no GCM.");
+		displayMessage(context, "Seu dispositivo foi registrado no GCM");
+		displayMessage(context, "e está pronto para receber notificações.");
 	}
 
 	@Override
@@ -78,38 +79,32 @@ public class GCMIntentService extends GCMBaseIntentService {
 	/**
 	 * Gera a notificação na barra de status do dispositivo.
 	 */
-	@SuppressWarnings("deprecation")
 	private void generateNotification(Context context, String message) {
 		int icon = R.drawable.ic_launcher;
 		long when = System.currentTimeMillis();
-		long pattern[] = { 0, 300, 100, 700, 100 };
-		
-		NotificationManager notificationManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(icon, message, when);
-
+		long[] pattern = { 0, 300, 100, 700, 100 };
 		String title = context.getString(R.string.app_name);
+		Uri sound = Uri.parse("android.resource://" + getPackageName() + "/"
+				+ R.raw.bloop);
+		
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(
+				this).setSmallIcon(icon).setContentTitle(title)
+				.setContentText(message);
 
-		Intent notificationIntent = new Intent(context, ShowMessageActivity.class);
-
+		Intent notificationIntent = new Intent(this, ShowMessageActivity.class);
 		notificationIntent.putExtra("message", message);
-		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent intent = PendingIntent.getActivity(context, 0,
+		
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		notification.setLatestEventInfo(context, title, message, intent);
-
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		
-		notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
-		        + "://" + getPackageName() + "/raw/bloop");
-		
-		//Vibração personalizada
-		Vibrator vibra = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		vibra.vibrate(pattern, -1);
+		builder.setContentIntent(contentIntent);
+		builder.setAutoCancel(true);
+		builder.setLights(Color.BLUE, 500, 500);
+		builder.setVibrate(pattern);
+		builder.setSound(sound);
+		builder.setStyle(new NotificationCompat.InboxStyle());
 
-		notificationManager.notify(0, notification);
-
+		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.notify(1, builder.build());
 	}
 }
