@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 import br.ufg.integracao.gcm.utilities.AlertDialogManager;
 import br.ufg.integracao.gcm.utilities.ConnectionDetector;
+import static br.ufg.integracao.gcm.utilities.CommonUtilities.SENDER_ID;
 
 import com.google.android.gcm.GCMRegistrar;
 /**
@@ -44,15 +45,17 @@ public class CheckActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					"Pronto para receber notificações", Toast.LENGTH_LONG)
 					.show();
-			Log.d("Registration ID", GCMRegistrar.getRegistrationId(this));
+			Log.d("regId", "O REGID do dispositivo é:" + GCMRegistrar.getRegistrationId(this));
 			Intent i = new Intent(getApplicationContext(), ShowMessageActivity.class);
 			startActivity(i);
 			finish();
 		} else {
-			// user doen't filled that data
-			// ask him to fill the form
-			alert.showAlertDialog(CheckActivity.this, "Falha de rede!",
-					"Falha na comunicação com o GCM", false);
+			// registra o dispositivo do usuário se for o primeiro acesso ao app
+			GCMRegistrar.register(this, SENDER_ID);
+			GCMRegistrar.setRegisteredOnServer(this, true);
+			Intent i = new Intent(getApplicationContext(), ShowMessageActivity.class);
+			startActivity(i);
+			finish();
 		}
 	}
 }

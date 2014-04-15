@@ -61,7 +61,7 @@ public class ShowMessageActivity extends Activity {
 
 		// Seta o ID de Registro do dispositivo na variável regId.
 		final String regId = GCMRegistrar.getRegistrationId(this);
-
+		System.err.print(regId);
 		// Checa o regId novamente, se não estiver registrado, o registra e
 		// checa novamente.
 		if (regId.equals("")) {
@@ -71,8 +71,7 @@ public class ShowMessageActivity extends Activity {
 			if (GCMRegistrar.isRegisteredOnServer(this)) {
 				return;
 			} else {
-				alert.showAlertDialog(ShowMessageActivity.this, "Erro Fatal!",
-						"Falha ao registrar o dispositivo no GCM, o aplicativo será fechado.", false);
+				GCMRegistrar.setRegisteredOnServer(this, true);
 			}
 		}
 	}

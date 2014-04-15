@@ -5,8 +5,10 @@ import static br.ufg.integracao.gcm.utilities.CommonUtilities.displayMessage;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Vibrator;
 import android.util.Log;
 
@@ -30,7 +32,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Dispositivo registrado: regId = " + registrationId);
-		displayMessage(context, "Your device registred with GCM");
+		displayMessage(context, "Seu dispositivo foi registrado no GCM.");
 	}
 
 	@Override
@@ -81,6 +83,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		int icon = R.drawable.ic_launcher;
 		long when = System.currentTimeMillis();
 		long pattern[] = { 0, 300, 100, 700, 100 };
+		
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notification = new Notification(icon, message, when);
@@ -98,9 +101,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		notification.setLatestEventInfo(context, title, message, intent);
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-		notification.defaults |= Notification.DEFAULT_SOUND;
-
+		
+		notification.sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+		        + "://" + getPackageName() + "/raw/bloop");
+		
+		//Vibração personalizada
 		Vibrator vibra = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		vibra.vibrate(pattern, -1);
 
