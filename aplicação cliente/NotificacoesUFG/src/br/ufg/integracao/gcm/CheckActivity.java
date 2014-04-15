@@ -45,14 +45,13 @@ public class CheckActivity extends Activity {
 			Toast.makeText(getApplicationContext(),
 					"Pronto para receber notificações", Toast.LENGTH_LONG)
 					.show();
-			Log.d("regId", "O REGID do dispositivo é:" + GCMRegistrar.getRegistrationId(this));
+			Log.d("regId", "O REGID do dispositivo é: " + GCMRegistrar.getRegistrationId(this));
 			Intent i = new Intent(getApplicationContext(), ShowMessageActivity.class);
 			startActivity(i);
 			finish();
 		} else {
 			// registra o dispositivo do usuário se for o primeiro acesso ao app
 			GCMRegistrar.register(this, SENDER_ID);
-			GCMRegistrar.setRegisteredOnServer(this, true);
 			Intent i = new Intent(getApplicationContext(), ShowMessageActivity.class);
 			startActivity(i);
 			finish();
