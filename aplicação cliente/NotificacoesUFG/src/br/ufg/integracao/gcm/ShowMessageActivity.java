@@ -65,12 +65,12 @@ public class ShowMessageActivity extends Activity {
 		// Checa o regId novamente, se não estiver registrado, o registra e
 		// checa novamente.
 		if (regId.equals("")) {
-			GCMRegistrar.register(this, SENDER_ID);
+				GCMRegistrar.register(this, SENDER_ID);
 		} else {
 			// Re-checa o registro do dispositivo no GCM
 			if (GCMRegistrar.isRegisteredOnServer(this)) {
 				return;
-			} else {
+			} else { //seta como registrado no GCM
 				GCMRegistrar.setRegisteredOnServer(this, true);
 			}
 		}

@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -31,9 +30,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
-		Log.i(TAG, "Dispositivo registrado: regId = " + registrationId);
+		Log.i(TAG, "Dispositivo registrado, regId = " + registrationId);
 		displayMessage(context, "Seu dispositivo foi registrado no GCM");
-		displayMessage(context, "e está pronto para receber notificações.");
+		displayMessage(context, "e está pronto para receber notificações");
 	}
 
 	@Override
@@ -86,20 +85,21 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String title = context.getString(R.string.app_name);
 		Uri sound = Uri.parse("android.resource://" + getPackageName() + "/"
 				+ R.raw.bloop);
-		
+
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				this).setSmallIcon(icon).setContentTitle(title)
 				.setContentText(message);
 
 		Intent notificationIntent = new Intent(this, ShowMessageActivity.class);
 		notificationIntent.putExtra("message", message);
-		
+
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
+
 		builder.setContentIntent(contentIntent);
 		builder.setAutoCancel(true);
 		builder.setLights(Color.BLUE, 500, 500);
+		builder.setWhen(when);
 		builder.setVibrate(pattern);
 		builder.setSound(sound);
 		builder.setStyle(new NotificationCompat.InboxStyle());

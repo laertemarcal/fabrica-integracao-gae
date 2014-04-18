@@ -1,5 +1,6 @@
 package br.ufg.integracao.gcm;
 
+import static br.ufg.integracao.gcm.utilities.CommonUtilities.SENDER_ID;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,9 +8,9 @@ import android.util.Log;
 import android.widget.Toast;
 import br.ufg.integracao.gcm.utilities.AlertDialogManager;
 import br.ufg.integracao.gcm.utilities.ConnectionDetector;
-import static br.ufg.integracao.gcm.utilities.CommonUtilities.SENDER_ID;
 
 import com.google.android.gcm.GCMRegistrar;
+
 /**
  * 
  * @author Laerte Filho

@@ -6,19 +6,20 @@ import android.content.Intent;
 /**
  * 
  * @author Laerte Filho
- *
- * Classe utilitária
- * <p>
- * Fornece variáveis constantes para facilitar a comunicação com o GCM
- * Tais como o ID do Projeto Google, Tag usada no LogCat e variáveis de ação do Broadcast
+ * 
+ *         Classe utilitária
+ *         <p>
+ *         Fornece variáveis constantes para facilitar a comunicação com o GCM
+ *         Tais como o ID do Projeto Google, Tag usada no LogCat e variáveis de
+ *         ação do Broadcast
  * 
  */
 
 public final class CommonUtilities {
 
-	// Id do Projeto Google (amazing-tiger-530)
+	// Id do Projeto Google
 	public static final String SENDER_ID = "984742398302";
-
+	
 	/**
 	 * TAG usada no LogCat.
 	 */
