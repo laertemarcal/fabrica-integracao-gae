@@ -22,7 +22,7 @@ import org.apache.http.util.EntityUtils;
  *         Classe responsável pelo POST HTTP enviando a notificação.
  * 
  * @param message
- * String - mensagem a ser enviada.
+ *            String - mensagem a ser enviada.
  */
 
 public class Envia {
@@ -35,13 +35,13 @@ public class Envia {
 
 	public Envia(String message) {
 		enviaNotificacao(
-				"APA91bFJn-0L8KbduvD7ykck4-fhdLxhzCMJlFoA6XVhU6k_wo9pis46bCyIiO5Axfbfa6xWagxCsLykR67JCXK1By6FG6Ywxofct84dWW3-1cJJce1CbwRgspdKIc0YN7P6nJBgW6oYhmy8AJvdizbJHv070cDYhw",
+				"APA91bEdGqSzO9yzi5Gd44R--EPotFaDudv4FC0JRzYgsEpbOLUjn9GdmTuBCPBjyg5gTbs80i6eWa3NQvEW41ZHaDrBYolZipIO1Id9eyFu9_xHjaxCL4qNCo8Rs4A1kOstNuJlQLlsnJ8dvr-jgmJfbRMXrsuw9Q",
 				message);
 	}
 
 	public Envia() {
 		enviaNotificacao(
-				"APA91bFJn-0L8KbduvD7ykck4-fhdLxhzCMJlFoA6XVhU6k_wo9pis46bCyIiO5Axfbfa6xWagxCsLykR67JCXK1By6FG6Ywxofct84dWW3-1cJJce1CbwRgspdKIc0YN7P6nJBgW6oYhmy8AJvdizbJHv070cDYhw",
+				"APA91bEdGqSzO9yzi5Gd44R--EPotFaDudv4FC0JRzYgsEpbOLUjn9GdmTuBCPBjyg5gTbs80i6eWa3NQvEW41ZHaDrBYolZipIO1Id9eyFu9_xHjaxCL4qNCo8Rs4A1kOstNuJlQLlsnJ8dvr-jgmJfbRMXrsuw9Q",
 				"Mensagem recebida!");
 	}
 
@@ -50,6 +50,8 @@ public class Envia {
 		formparams
 				.add(new BasicNameValuePair("registration_id", registrationId));
 		formparams.add(new BasicNameValuePair("data.price", message));
+		formparams.add(new BasicNameValuePair("time_to_live", Integer.toString(88640)));
+		formparams.add(new BasicNameValuePair("delay_while_idle", Boolean.toString(true)));
 
 		HttpPost httpPost = new HttpPost(URL);
 		httpPost.setHeader("Authorization", "key=" + SENDER_ID);
