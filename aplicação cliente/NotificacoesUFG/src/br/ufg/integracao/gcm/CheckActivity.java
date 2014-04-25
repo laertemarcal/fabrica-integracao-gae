@@ -51,8 +51,6 @@ public class CheckActivity extends Activity {
 			startActivity(i);
 			finish();
 		} else {
-			// registra o dispositivo do usuário se for o primeiro acesso ao app
-			GCMRegistrar.register(this, SENDER_ID);
 			Intent i = new Intent(getApplicationContext(), ShowMessageActivity.class);
 			startActivity(i);
 			finish();

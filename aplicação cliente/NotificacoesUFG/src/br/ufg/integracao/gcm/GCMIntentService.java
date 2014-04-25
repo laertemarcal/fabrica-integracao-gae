@@ -31,8 +31,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
 		Log.i(TAG, "Dispositivo registrado, regId = " + registrationId);
-		displayMessage(context, "Seu dispositivo foi registrado no GCM");
-		displayMessage(context, "e está pronto para receber notificações");
+		displayMessage(context, "Seu dispositivo foi registrado no GCM!");
 	}
 
 	@Override
