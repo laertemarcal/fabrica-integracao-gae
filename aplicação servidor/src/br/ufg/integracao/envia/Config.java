@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class ConfigReader {
+public class Config {
 	private static final String FILEPATH = "C:/Users/Laerte Filho/Desktop/config.ini";
 	private static final Properties config = new Properties();
 	private static String data;

@@ -27,18 +27,18 @@ import org.apache.http.util.EntityUtils;
 
 public class Envia {
 	private static final String URL = "https://android.googleapis.com/gcm/send";
-	private static final String APIKEY = ConfigReader.getApiKey();
+	private static final String APIKEY = Config.getApiKey();
 
 	public Envia(String regId, String message) {
 		enviaNotificacao(regId, message);
 	}
 
 	public Envia(String message) {
-		enviaNotificacao(ConfigReader.getRegId(), message);
+		enviaNotificacao(Config.getRegId(), message);
 	}
 
 	public Envia() {
-		enviaNotificacao(ConfigReader.getRegId(), "Mensagem recebida!");
+		enviaNotificacao(Config.getRegId(), "Mensagem recebida!");
 	}
 
 	private void enviaNotificacao(String registrationId, String message) {
