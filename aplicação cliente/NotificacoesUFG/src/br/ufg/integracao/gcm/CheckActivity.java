@@ -1,6 +1,5 @@
 package br.ufg.integracao.gcm;
 
-import static br.ufg.integracao.gcm.utilities.CommonUtilities.SENDER_ID;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
