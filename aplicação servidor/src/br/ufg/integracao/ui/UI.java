@@ -18,7 +18,7 @@ public class UI extends JFrame implements ActionListener {
 	/**
 	 * Interface gráfica da aplicação
 	 */
-	
+
 	private static final long serialVersionUID = 8414190459255647741L;
 	private JLabel rotulo;
 	private JTextArea campo;

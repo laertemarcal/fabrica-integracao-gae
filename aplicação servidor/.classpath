@@ -9,7 +9,5 @@
 	<classpathentry kind="lib" path="libs/httpclient-cache-4.3.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-4.3.2.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.3.3.jar"/>
-	<classpathentry kind="lib" path="libs/ini4j-0.5.2-jdk14.jar"/>
-	<classpathentry kind="lib" path="libs/ini4j-0.5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -18,7 +18,7 @@ import org.apache.http.util.EntityUtils;
 /**
  * 
  * @author Laerte Filho
- * 
+ * <p>
  *         Classe responsável pelo POST HTTP enviando a notificação.
  * 
  * @param message
@@ -29,8 +29,6 @@ public class Envia {
 	private static final String URL = "https://android.googleapis.com/gcm/send";
 	private static final String APIKEY = ConfigReader.getApiKey();
 
-	// private static final String APIKEY = new ConfigReader().getApiKey();
-
 	public Envia(String regId, String message) {
 		enviaNotificacao(regId, message);
 	}
@@ -40,9 +38,7 @@ public class Envia {
 	}
 
 	public Envia() {
-		enviaNotificacao(
-				ConfigReader.getRegId(),
-				"Mensagem recebida!");
+		enviaNotificacao(ConfigReader.getRegId(), "Mensagem recebida!");
 	}
 
 	private void enviaNotificacao(String registrationId, String message) {
