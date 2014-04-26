@@ -1,7 +1,7 @@
 package br.ufg.integracao.gcm;
 
-import static br.ufg.integracao.gcm.utilities.CommonUtilities.SENDER_ID;
 import static br.ufg.integracao.gcm.utilities.CommonUtilities.displayMessage;
+import static br.ufg.integracao.gcm.utilities.CommonUtilities.SENDER_ID;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import br.ufg.integracao.gcm.utilities.CommonUtilities;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
@@ -81,13 +82,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 		int icon = R.drawable.ic_launcher;
 		long when = System.currentTimeMillis();
 		long[] pattern = { 0, 300, 100, 700, 100 };
+
 		String title = context.getString(R.string.app_name);
 		Uri sound = Uri.parse("android.resource://" + getPackageName() + "/"
 				+ R.raw.bloop);
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
-				this).setSmallIcon(icon).setContentTitle(title)
-				.setContentText(message);
+				this);
 
 		Intent notificationIntent = new Intent(this, ShowMessageActivity.class);
 		notificationIntent.putExtra("message", message);
@@ -95,6 +96,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+		builder.setSmallIcon(icon);
+		builder.setContentTitle(title);
+		builder.setContentText(message);
 		builder.setContentIntent(contentIntent);
 		builder.setAutoCancel(true);
 		builder.setLights(Color.BLUE, 500, 500);

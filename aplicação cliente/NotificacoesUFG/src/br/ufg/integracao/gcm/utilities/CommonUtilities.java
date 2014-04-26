@@ -1,12 +1,18 @@
 package br.ufg.integracao.gcm.utilities;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.prefs.Preferences;
+
 import android.content.Context;
 import android.content.Intent;
 
 /**
  * 
  * @author Laerte Filho
- * 
+ *         <p>
  *         Classe utilitária
  *         <p>
  *         Fornece variáveis constantes para facilitar a comunicação com o GCM
@@ -16,10 +22,9 @@ import android.content.Intent;
  */
 
 public final class CommonUtilities {
-
 	// Id do Projeto Google
 	public static final String SENDER_ID = "984742398302";
-	
+
 	/**
 	 * TAG usada no LogCat.
 	 */
