@@ -26,22 +26,22 @@ import org.apache.http.util.EntityUtils;
  */
 
 public class Envia {
-	private String URL = "https://android.googleapis.com/gcm/send";
-	private String SENDER_ID = "AIzaSyASGKkq29juNaOfRxCuTDFm1iDn0QhG4p8";
+	private static final String URL = "https://android.googleapis.com/gcm/send";
+	private static final String APIKEY = ConfigReader.getApiKey();
+
+	// private static final String APIKEY = new ConfigReader().getApiKey();
 
 	public Envia(String regId, String message) {
 		enviaNotificacao(regId, message);
 	}
 
 	public Envia(String message) {
-		enviaNotificacao(
-				"APA91bEdGqSzO9yzi5Gd44R--EPotFaDudv4FC0JRzYgsEpbOLUjn9GdmTuBCPBjyg5gTbs80i6eWa3NQvEW41ZHaDrBYolZipIO1Id9eyFu9_xHjaxCL4qNCo8Rs4A1kOstNuJlQLlsnJ8dvr-jgmJfbRMXrsuw9Q",
-				message);
+		enviaNotificacao(ConfigReader.getRegId(), message);
 	}
 
 	public Envia() {
 		enviaNotificacao(
-				"APA91bEdGqSzO9yzi5Gd44R--EPotFaDudv4FC0JRzYgsEpbOLUjn9GdmTuBCPBjyg5gTbs80i6eWa3NQvEW41ZHaDrBYolZipIO1Id9eyFu9_xHjaxCL4qNCo8Rs4A1kOstNuJlQLlsnJ8dvr-jgmJfbRMXrsuw9Q",
+				ConfigReader.getRegId(),
 				"Mensagem recebida!");
 	}
 
@@ -50,11 +50,13 @@ public class Envia {
 		formparams
 				.add(new BasicNameValuePair("registration_id", registrationId));
 		formparams.add(new BasicNameValuePair("data.price", message));
-		formparams.add(new BasicNameValuePair("time_to_live", Integer.toString(88640)));
-		formparams.add(new BasicNameValuePair("delay_while_idle", Boolean.toString(true)));
+		formparams.add(new BasicNameValuePair("time_to_live", Integer
+				.toString(86400)));
+		formparams.add(new BasicNameValuePair("delay_while_idle", Boolean
+				.toString(true)));
 
 		HttpPost httpPost = new HttpPost(URL);
-		httpPost.setHeader("Authorization", "key=" + SENDER_ID);
+		httpPost.setHeader("Authorization", "key=" + APIKEY);
 		httpPost.setHeader("Content-Type",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 
