@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.ufg.integracao.gcm.utilities.AlertDialogManager;
+import br.ufg.integracao.gcm.utilities.WakeLocker;
 
 import com.google.android.gcm.GCMRegistrar;
 
@@ -79,11 +80,12 @@ public class ShowMessageActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String newMessage = intent.getExtras().getString(EXTRA_MESSAGE);
-
+			WakeLocker.acquire(getApplicationContext());
 			// Mostra a mensagem recebida na UI
 			lblMessage.append(newMessage + "\n");
 			Toast.makeText(getApplicationContext(),
 					"Nova Mensagem: " + newMessage, Toast.LENGTH_LONG).show();
+			WakeLocker.release();
 		}
 	};
 
