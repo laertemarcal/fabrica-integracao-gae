@@ -1,6 +1,8 @@
 package br.ufg.integracao.envia;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import org.apache.http.util.EntityUtils;
 /**
  * 
  * @author Laerte Filho
- * <p>
+ *         <p>
  *         Classe responsável pelo POST HTTP enviando a notificação.
  * 
  * @param message
@@ -43,13 +45,11 @@ public class Envia {
 
 	private void enviaNotificacao(String registrationId, String message) {
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-		formparams
-				.add(new BasicNameValuePair("registration_id", registrationId));
-		formparams.add(new BasicNameValuePair("data.price", message));
-		formparams.add(new BasicNameValuePair("time_to_live", Integer
-				.toString(86400)));
-		formparams.add(new BasicNameValuePair("delay_while_idle", Boolean
-				.toString(true)));
+		formparams.add(new BasicNameValuePair("collapse_key", "mensagem_gcm")); //Chave de colisão da notificação
+		formparams.add(new BasicNameValuePair("registration_id", registrationId)); //Registration ID do dispositivo
+		formparams.add(new BasicNameValuePair("data.price", message)); //Texto plano da mensagem a ser enviada
+		formparams.add(new BasicNameValuePair("time_to_live", "86400")); //Tempo de vida de 24 horas da notificação
+		formparams.add(new BasicNameValuePair("delay_while_idle", "1"));
 
 		HttpPost httpPost = new HttpPost(URL);
 		httpPost.setHeader("Authorization", "key=" + APIKEY);
@@ -59,6 +59,16 @@ public class Envia {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(formparams, "utf-8"));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					httpPost.getEntity().getContent()));
+
+			StringBuffer result = new StringBuffer();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+
+			System.out.println(result.toString());
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 			System.out.println(EntityUtils.toString(httpResponse.getEntity()));
 		} catch (UnsupportedEncodingException e) {
