@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.ufg.inf.integracao.ufgnotify.client.R;
+import br.ufg.inf.integracao.ufgnotify.client.util.ConnectionDetector;
 import br.ufg.inf.integracao.ufgnotify.client.util.Constants;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,6 +29,7 @@ public class MainActivity extends Activity {
 	Context context;
 	GoogleCloudMessaging gcm;
 	String regId;
+	private int screenOrientation = getRequestedOrientation();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +38,27 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		mMessage = (TextView) findViewById(R.id.txtMessage);
 		context = getApplicationContext();
+		if (!checkConnectivity()) {
+			Toast.makeText(this, "Não é possível conectar", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regId = getRegistrationId(context);
 
 			if (regId == null || "".equals(regId)) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 				registerDeviceInGcm();
+				setRequestedOrientation(screenOrientation);
 			} else {
 				Log.d(Constants.TAG, "ID de Registro do Dispositivo: " + regId);
 				if (!hasMessage()) {
-						Toast.makeText(this, "Pronto para receber notificações...", Toast.LENGTH_SHORT).show();
-					}
+					Toast.makeText(this, "Pronto para receber notificações...",
+							Toast.LENGTH_SHORT).show();
 				}
+			}
 			if (hasMessage()) {
 				String message = getMessage();
 				mMessage.setText(message + "\n");
@@ -59,7 +71,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	
 	private boolean hasMessage() {
 		String message = getMessage();
 		if (message == null || "".equals(message)) {
@@ -68,7 +79,12 @@ public class MainActivity extends Activity {
 			return true;
 		}
 	}
-	
+
+	private boolean checkConnectivity() {
+		ConnectionDetector cd = new ConnectionDetector(this);
+		return cd.isConnectingToInternet();
+	}
+
 	/**
 	 * @return String - mensagem recebida da intent
 	 */
@@ -76,27 +92,31 @@ public class MainActivity extends Activity {
 		return getIntent().getStringExtra(Constants.EXTRA_MESSAGE);
 	}
 
-	//Este método refaz a checagem do GooglePlayServices se a aplicação for resumida
+	// Este método refaz a checagem do GooglePlayServices se a aplicação for
+	// resumida
 	@Override
 	protected void onResume() {
 		super.onResume();
 		checkPlayServices();
 	}
 
-	//Desregistra o BroadcastReceiver ao sair da aplicação
+	// Desregistra o BroadcastReceiver ao sair da aplicação
 	@Override
 	protected void onDestroy() {
-		try {
-			unregisterReceiver(mMessageReceiver);
-		} catch (Exception e) {
-			Log.e("Erro no unregisterReceiver", "> " + e.getMessage());
+		if (mMessageReceiver != null) {
+			try {
+				unregisterReceiver(mMessageReceiver);
+			} catch (Exception e) {
+				Log.e("Erro no unregisterReceiver", "> " + e.getMessage());
+			}
 		}
 		super.onDestroy();
 	}
 
-	
 	/**
-	 * Método responsável por checar se o dispositivo a ser registrado no GCM possui suporte ao Google Play Services
+	 * Método responsável por checar se o dispositivo a ser registrado no GCM
+	 * possui suporte ao Google Play Services
+	 * 
 	 * @return true or false
 	 */
 	private boolean checkPlayServices() {
@@ -116,7 +136,9 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Este método retorna o id de registro (registrationId) armazenado nas preferências compartilhadas
+	 * Este método retorna o id de registro (registrationId) armazenado nas
+	 * preferências compartilhadas
+	 * 
 	 * @param context
 	 * @return registrationId
 	 */
@@ -138,7 +160,9 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Método responsável por pegar as preferências armazenadas. No caso, o ID de Registro do dispositivo.
+	 * Método responsável por pegar as preferências armazenadas. No caso, o ID
+	 * de Registro do dispositivo.
+	 * 
 	 * @param context
 	 * @return prefs
 	 */
@@ -148,7 +172,9 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Método responsável por pegar a versão do app através de informações do pacote
+	 * Método responsável por pegar a versão do app através de informações do
+	 * pacote
+	 * 
 	 * @param context
 	 * @return número da versão da aplicação
 	 */
@@ -165,8 +191,9 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Método responsável por registrar o dispositivo no serviço do GCM
-	 * O registro é feito de forma assíncrona, instanciando e executando um objeto AsyncTask
+	 * Método responsável por registrar o dispositivo no serviço do GCM O
+	 * registro é feito de forma assíncrona, instanciando e executando um objeto
+	 * AsyncTask
 	 */
 	private void registerDeviceInGcm() {
 		new AsyncTask<Void, Void, String>() {
@@ -209,7 +236,8 @@ public class MainActivity extends Activity {
 		Log.i("ID de Registro", "Armazenando ID de Registro na versão "
 				+ appVersion + " do app.");
 		Log.d("ID de Registro: ", regId);
-		Toast.makeText(this, "Dispositivo registrado com sucesso!", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Dispositivo registrado com sucesso!",
+				Toast.LENGTH_LONG).show();
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(Constants.PROPERTY_REG_ID, regId);
 		editor.putInt(Constants.PROPERTY_APP_VERSION, appVersion);
@@ -217,8 +245,8 @@ public class MainActivity extends Activity {
 	}
 
 	/*
-	 *  Registra o BroadCastReceiver tratando as mensagens recebidas pelo serviço
-	 *  do GCM
+	 * Registra o BroadCastReceiver tratando as mensagens recebidas pelo serviço
+	 * do GCM
 	 */
 	private final BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 		@Override
